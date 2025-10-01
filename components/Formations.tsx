@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 export default function Formations() {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -103,15 +104,16 @@ export default function Formations() {
                   >
                     <h3 className="text-xl font-bold text-black mb-4 font-kontora">{formation.title}</h3>
                     <p className="text-black text-sm mb-6 leading-relaxed font-poppins">{formation.description}</p>
-                    <button
+                    <Link
+                      href="/formations"
                       className={`text-sm font-bold font-poppins transition-all duration-300 ${
                         formation.color === "border-[#ffae00]" 
                           ? "text-[#ffae00] hover:text-[#e69a00]" 
                           : "text-[#00a0e8] hover:text-[#0085c3]"
-                      } hover:underline`}
+                      } hover:underline inline-block`}
                     >
                       Voir Plus →
-                    </button>
+                    </Link>
                   </div>
                 ))}
               </div>

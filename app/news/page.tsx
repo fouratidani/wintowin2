@@ -1,60 +1,147 @@
+'use client'
+
+import { useState, useEffect } from "react"
 import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
 import Link from "next/link"
+import { newsApi } from "../../lib/api"
+
+interface NewsArticle {
+  id: number
+  title: string
+  content: string
+  excerpt: string
+  category: string
+  image?: string
+  isPublished: boolean
+  publishDate: string
+  readTime: string
+  createdAt: string
+  updatedAt?: string
+}
 
 export default function News() {
-  const newsArticles = [
-    {
-      id: 1,
-      title: "Nouvelle Formation en Intelligence Artificielle",
-      date: "15 Septembre 2025",
-      category: "Formation",
-      excerpt: "Découvrez notre nouveau programme de formation en IA, conçu pour les professionnels souhaitant maîtriser les technologies de demain.",
-      readTime: "3 min"
-    },
-    {
-      id: 2,
-      title: "Partenariat Stratégique avec Tech Solutions",
-      date: "10 Septembre 2025",
-      category: "Partenariat",
-      excerpt: "Nous sommes fiers d'annoncer notre nouveau partenariat qui enrichira notre offre de formations techniques.",
-      readTime: "2 min"
-    },
-    {
-      id: 3,
-      title: "Certification Huawei : Nouveaux Modules Disponibles",
-      date: "8 Septembre 2025",
-      category: "Certification",
-      excerpt: "Élargissez vos compétences avec nos nouveaux modules de certification Huawei en télécommunications et solutions cloud.",
-      readTime: "4 min"
-    },
-    {
-      id: 4,
-      title: "Succès de nos Diplômés : Témoignages",
-      date: "5 Septembre 2025",
-      category: "Témoignages",
-      excerpt: "Découvrez les parcours inspirants de nos anciens participants et leurs réussites professionnelles.",
-      readTime: "5 min"
-    },
-    {
-      id: 5,
-      title: "Formation Hybride : L'Avenir de l'Apprentissage",
-      date: "1 Septembre 2025",
-      category: "Innovation",
-      excerpt: "Comment notre approche hybride révolutionne l'expérience d'apprentissage en combinant présentiel et digital.",
-      readTime: "6 min"
-    },
-    {
-      id: 6,
-      title: "Ouverture du Nouveau Campus à Casablanca",
-      date: "28 Août 2025",
-      category: "Infrastructure",
-      excerpt: "Un nouveau campus ultramoderne pour mieux vous accueillir et enrichir votre expérience de formation.",
-      readTime: "3 min"
-    }
-  ]
+  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([])
+  const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState("Toutes")
+  const [displayCount, setDisplayCount] = useState(6)
+  const [categories, setCategories] = useState<string[]>(["Toutes"])
 
-  const categories = ["Toutes", "Formation", "Partenariat", "Certification", "Témoignages", "Innovation", "Infrastructure"]
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setLoading(true)
+        const data = await newsApi.getAll()
+        
+        if (data && data.length > 0) {
+          setNewsArticles(data)
+          setFilteredArticles(data)
+          
+          // Extract unique categories from articles
+          const articleCategories = data.map((article: any) => article.category).filter((cat: any) => Boolean(cat)) as string[]
+          const uniqueCategories: string[] = ["Toutes", ...new Set(articleCategories)]
+          setCategories(uniqueCategories)
+        } else {
+          // Fallback data if backend is not available
+          const fallbackArticles: NewsArticle[] = [
+            {
+              id: 1,
+              title: "Nouvelle Formation en Intelligence Artificielle",
+              content: "Découvrez notre nouveau programme de formation en IA...",
+              excerpt: "Découvrez notre nouveau programme de formation en IA, conçu pour les professionnels souhaitant maîtriser les technologies de demain.",
+              category: "Formation",
+              isPublished: true,
+              publishDate: "2025-09-15T00:00:00.000Z",
+              readTime: "3 min",
+              createdAt: "2025-09-15T00:00:00.000Z"
+            },
+            {
+              id: 2,
+              title: "Partenariat Stratégique avec Tech Solutions",
+              content: "Nous sommes fiers d'annoncer notre nouveau partenariat...",
+              excerpt: "Nous sommes fiers d'annoncer notre nouveau partenariat qui enrichira notre offre de formations techniques.",
+              category: "Partenariat",
+              isPublished: true,
+              publishDate: "2025-09-10T00:00:00.000Z",
+              readTime: "2 min",
+              createdAt: "2025-09-10T00:00:00.000Z"
+            },
+            {
+              id: 3,
+              title: "Certification Huawei : Nouveaux Modules Disponibles",
+              content: "Élargissez vos compétences avec nos nouveaux modules...",
+              excerpt: "Élargissez vos compétences avec nos nouveaux modules de certification Huawei en télécommunications et solutions cloud.",
+              category: "Certification",
+              isPublished: true,
+              publishDate: "2025-09-08T00:00:00.000Z",
+              readTime: "4 min",
+              createdAt: "2025-09-08T00:00:00.000Z"
+            }
+          ]
+          setNewsArticles(fallbackArticles)
+          setFilteredArticles(fallbackArticles)
+        }
+      } catch (err) {
+        setError('Erreur lors du chargement des actualités')
+        console.error('Error fetching news:', err)
+        
+        // Fallback data on error
+        const fallbackArticles: NewsArticle[] = [
+          {
+            id: 1,
+            title: "Nouvelle Formation en Intelligence Artificielle",
+            content: "Découvrez notre nouveau programme de formation en IA...",
+            excerpt: "Découvrez notre nouveau programme de formation en IA, conçu pour les professionnels souhaitant maîtriser les technologies de demain.",
+            category: "Formation",
+            isPublished: true,
+            publishDate: "2025-09-15T00:00:00.000Z",
+            readTime: "3 min",
+            createdAt: "2025-09-15T00:00:00.000Z"
+          }
+        ]
+        setNewsArticles(fallbackArticles)
+        setFilteredArticles(fallbackArticles)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNews()
+  }, [])
+
+  useEffect(() => {
+    if (selectedCategory === "Toutes") {
+      setFilteredArticles(newsArticles)
+    } else {
+      setFilteredArticles(newsArticles.filter(article => article.category === selectedCategory))
+    }
+    setDisplayCount(6) // Reset display count when category changes
+  }, [selectedCategory, newsArticles])
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long', 
+      year: 'numeric'
+    })
+  }
+
+  const calculateReadTime = (content: string) => {
+    const wordsPerMinute = 200
+    const wordCount = content.split(' ').length
+    const readTime = Math.ceil(wordCount / wordsPerMinute)
+    return `${readTime} min`
+  }
+
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + 6)
+  }
+
+  const handleCategoryFilter = (category: string) => {
+    setSelectedCategory(category)
+  }
 
   return (
     <>
@@ -79,8 +166,9 @@ export default function News() {
           {categories.map((category, index) => (
             <button
               key={index}
+              onClick={() => handleCategoryFilter(category)}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                index === 0 
+                category === selectedCategory 
                   ? 'bg-[#00a0e8] text-white' 
                   : 'bg-white text-gray-700 hover:bg-[#00a0e8] hover:text-white border border-gray-200'
               }`}
@@ -91,55 +179,113 @@ export default function News() {
         </div>
       </section>
 
-      {/* News Grid */}
-      <section className="px-4 pb-20 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {newsArticles.map((article) => (
-            <Link
-              key={article.id}
-              href={`/news/article-${article.id}`}
-              className="block"
+      {/* Loading State */}
+      {loading && (
+        <section className="px-4 pb-20 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="bg-white rounded-2xl border border-gray-200 overflow-hidden animate-pulse">
+                <div className="h-48 bg-gray-200"></div>
+                <div className="p-6">
+                  <div className="h-4 bg-gray-200 rounded mb-3 w-1/3"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-4 w-2/3"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Error State */}
+      {error && !loading && (
+        <section className="px-4 pb-20 max-w-7xl mx-auto text-center">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-8">
+            <p className="text-red-600 mb-4">{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
             >
-              <article className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                {/* Article Image Placeholder */}
-                <div className="h-48 bg-gradient-to-br from-[#00a0e8] to-[#0080c7] relative">
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-white/90 text-[#00a0e8] px-3 py-1 rounded-full text-sm font-medium">
-                      {article.category}
+              Réessayer
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* News Grid */}
+      {!loading && !error && (
+        <section className="px-4 pb-20 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredArticles.slice(0, displayCount).map((article) => (
+              <Link
+                key={article.id}
+                href={`/news/${article.id}`}
+                className="block"
+              >
+                <article className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  {/* Article Image */}
+                  <div className="h-48 bg-gradient-to-br from-[#00a0e8] to-[#0080c7] relative overflow-hidden">
+                    {article.image ? (
+                      <img 
+                        src={article.image} 
+                        alt={article.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#00a0e8] to-[#0080c7]"></div>
+                    )}
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-white/90 text-[#00a0e8] px-3 py-1 rounded-full text-sm font-medium">
+                        {article.category}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-4 right-4 text-white/90 text-sm">
+                      📖 {article.readTime}
+                    </div>
+                  </div>
+
+                  {/* Article Content */}
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                      <span>📅 {formatDate(article.publishDate)}</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
+                      {article.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed mb-4 line-clamp-3">
+                      {article.excerpt}
+                    </p>
+                    <span className="text-[#00a0e8] font-medium hover:text-[#0080c7] transition-colors inline-flex items-center gap-1">
+                      Lire la suite →
                     </span>
                   </div>
-                  <div className="absolute bottom-4 right-4 text-white/90 text-sm">
-                    📖 {article.readTime}
-                  </div>
-                </div>
+                </article>
+              </Link>
+            ))}
+          </div>
 
-                {/* Article Content */}
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                    <span>📅 {article.date}</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
-                    {article.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed mb-4 line-clamp-3">
-                    {article.excerpt}
-                  </p>
-                  <span className="text-[#00a0e8] font-medium hover:text-[#0080c7] transition-colors inline-flex items-center gap-1">
-                    Lire la suite →
-                  </span>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
+          {/* Load More Button */}
+          {filteredArticles.length > displayCount && (
+            <div className="text-center mt-12">
+              <button 
+                onClick={handleLoadMore}
+                className="bg-white border-2 border-[#00a0e8] text-[#00a0e8] px-8 py-3 rounded-full font-medium hover:bg-[#00a0e8] hover:text-white transition-all duration-300"
+              >
+                Voir Plus d'Articles
+              </button>
+            </div>
+          )}
 
-        {/* Load More Button */}
-        <div className="text-center mt-12">
-          <button className="bg-white border-2 border-[#00a0e8] text-[#00a0e8] px-8 py-3 rounded-full font-medium hover:bg-[#00a0e8] hover:text-white transition-all duration-300">
-            Charger Plus d'Articles
-          </button>
-        </div>
-      </section>
+          {/* No Articles Message */}
+          {filteredArticles.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">Aucun article trouvé dans cette catégorie.</p>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Newsletter Subscription */}
       <section className="bg-gradient-to-r from-[#00a0e8] to-[#0080c7] px-4 py-16">

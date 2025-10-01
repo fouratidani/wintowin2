@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function WhyChooseUs() {
   const reasons = [
     "Une expertise pluridisciplinaire et internationale",
@@ -23,9 +25,12 @@ export default function WhyChooseUs() {
             <p className="text-white text-lg md:text-xl mb-8 leading-relaxed">
               Parce que votre réussite est au cœur de notre mission.
             </p>
-            <button className="bg-[#00a0e8] text-white font-semibold text-lg px-8 py-4 rounded-full hover:bg-[#0088cc] transition-all duration-300">
+            <Link 
+              href="/about"
+              className="bg-[#00a0e8] text-white font-semibold text-lg px-8 py-4 rounded-full hover:bg-[#0088cc] transition-all duration-300 inline-block"
+            >
               Voir Plus
-            </button>
+            </Link>
           </div>
 
           {/* Right Content - Reasons */}

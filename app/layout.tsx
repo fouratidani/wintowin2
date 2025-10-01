@@ -2,6 +2,9 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import "./globals.css"
+import { CookieConsentProvider } from "../contexts/CookieConsentContext"
+import CookieConsentBanner from "../components/CookieConsentBanner"
+import PageViewTracker from "../components/PageViewTracker"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -29,7 +32,13 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-poppins">{children}</body>
+      <body className="font-poppins">
+        <CookieConsentProvider>
+          <PageViewTracker />
+          {children}
+          <CookieConsentBanner />
+        </CookieConsentProvider>
+      </body>
     </html>
   )
 }

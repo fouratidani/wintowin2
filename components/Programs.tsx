@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Programs() {
   const programs = [
     {
@@ -64,9 +66,12 @@ export default function Programs() {
 
                 {/* Voir Plus Button (appears on hover) */}
                 <div className="opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
-                  <button className="bg-white text-[#00a0e8] font-semibold text-lg px-6 py-3 rounded-full hover:bg-gray-100 transition-all duration-300">
+                  <Link 
+                    href="/services/etudiants"
+                    className="bg-white text-[#00a0e8] font-semibold text-lg px-6 py-3 rounded-full hover:bg-gray-100 transition-all duration-300 inline-block"
+                  >
                     Voir Plus
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

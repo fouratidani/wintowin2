@@ -1,5 +1,75 @@
+"use client"
+
+import { useState } from 'react'
 import Image from "next/image"
+import { newsletterApi } from '@/lib/api'
+import { trackEvent } from '@/lib/cookie-consent'
+
 export default function Footer() {
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email.trim()) return
+
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    // Track newsletter subscription attempt
+    trackEvent({
+      eventType: 'form_submit',
+      eventCategory: 'Newsletter',
+      eventAction: 'Subscription Attempt',
+      eventLabel: 'Footer Newsletter',
+      pageUrl: window.location.href,
+      referrer: document.referrer,
+      additionalData: { 
+        email_domain: email.split('@')[1] || 'unknown',
+        form_location: 'footer'
+      }
+    })
+
+    try {
+      await newsletterApi.subscribe(email)
+      setSubmitStatus('success')
+      setEmail('')
+      
+      // Track successful subscription
+      trackEvent({
+        eventType: 'conversion',
+        eventCategory: 'Newsletter',
+        eventAction: 'Subscription Success',
+        eventLabel: 'Footer Newsletter',
+        pageUrl: window.location.href,
+        referrer: document.referrer,
+        additionalData: { 
+          email_domain: email.split('@')[1] || 'unknown',
+          form_location: 'footer'
+        }
+      })
+    } catch (error) {
+      console.error('Newsletter subscription error:', error)
+      setSubmitStatus('error')
+      
+      // Track failed subscription
+      trackEvent({
+        eventType: 'error',
+        eventCategory: 'Newsletter',
+        eventAction: 'Subscription Error',
+        eventLabel: 'Footer Newsletter',
+        pageUrl: window.location.href,
+        referrer: document.referrer,
+        additionalData: { 
+          error_type: 'api_error',
+          form_location: 'footer'
+        }
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
   return (
     <footer className="bg-[#11023f] text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,18 +80,32 @@ export default function Footer() {
               <p className="text-lg md:text-xl leading-relaxed font-poppins">
                 Inscrivez-vous à notre newsletter pour ne rien manquer de nos nouveautés et opportunités.
               </p>
+              {submitStatus === 'success' && (
+                <p className="text-green-400 text-sm mt-2">✓ Inscription réussie ! Merci de votre confiance.</p>
+              )}
+              {submitStatus === 'error' && (
+                <p className="text-red-400 text-sm mt-2">✗ Erreur lors de l'inscription. Veuillez réessayer.</p>
+              )}
             </div>
             <div className="flex-1 max-w-lg">
-              <div className="flex bg-[#87ceeb] rounded-full p-1">
+              <form onSubmit={handleNewsletterSubmit} className="flex bg-[#87ceeb] rounded-full p-1">
                 <input
                   type="email"
                   placeholder="example@exemple.com"
-                  className="flex-1 px-6 py-3 rounded-l-full bg-transparent text-[#11023f] placeholder-[#11023f]/70 focus:outline-none font-poppins"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isSubmitting}
+                  className="flex-1 px-6 py-3 rounded-l-full bg-transparent text-[#11023f] placeholder-[#11023f]/70 focus:outline-none font-poppins disabled:opacity-50"
                 />
-                <button className="bg-[#11023f] text-white font-poppins font-bold px-8 py-3 rounded-full hover:bg-[#0f0238] transition-all">
-                  Envoyer
+                <button 
+                  type="submit"
+                  disabled={isSubmitting || !email.trim()}
+                  className="bg-[#11023f] text-white font-poppins font-bold px-8 py-3 rounded-full hover:bg-[#0f0238] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Envoi...' : 'Envoyer'}
                 </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
@@ -88,6 +172,28 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="text-center pt-8 border-t border-white/20">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-4">
+            <a 
+              href="/privacy-policy" 
+              className="text-white/70 hover:text-white transition-colors text-sm"
+            >
+              Politique de Confidentialité
+            </a>
+            <span className="hidden md:inline text-white/30">•</span>
+            <a 
+              href="/cookie-preferences" 
+              className="text-white/70 hover:text-white transition-colors text-sm"
+            >
+              Préférences de Cookies
+            </a>
+            <span className="hidden md:inline text-white/30">•</span>
+            <a 
+              href="mailto:contact@winstowin.com" 
+              className="text-white/70 hover:text-white transition-colors text-sm"
+            >
+              Nous Contacter
+            </a>
+          </div>
           <p className="text-lg font-poppins">2025 © All Rights Reserved</p>
         </div>
       </div>

@@ -1,6 +1,85 @@
+"use client"
+
+import { useState } from 'react'
 import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
+import { preinscriptionApi, type PreinscriptionData } from '@/lib/api'
+
 export default function PreInscription() {
+  const [formData, setFormData] = useState<PreinscriptionData>({
+    prenom: '',
+    nom: '',
+    email: '',
+    telephone: '',
+    entreprise: '',
+    poste: '',
+    secteur: '',
+    formationType: '',
+    domaine: '',
+    niveau: '',
+    objectifs: '',
+    source: '',
+    newsletter: false
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target
+    
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked
+      setFormData(prev => ({
+        ...prev,
+        [name]: checked
+      }))
+    } else if (type === 'radio') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+    setErrorMessage('')
+
+    try {
+      await preinscriptionApi.submit(formData)
+      setSubmitStatus('success')
+      // Reset form
+      setFormData({
+        prenom: '',
+        nom: '',
+        email: '',
+        telephone: '',
+        entreprise: '',
+        poste: '',
+        secteur: '',
+        formationType: '',
+        domaine: '',
+        niveau: '',
+        objectifs: '',
+        source: '',
+        newsletter: false
+      })
+    } catch (error) {
+      console.error('Form submission error:', error)
+      setSubmitStatus('error')
+      setErrorMessage('Une erreur est survenue lors de l\'envoi du formulaire. Veuillez réessayer.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
   return (
     <main className="min-h-screen bg-gray-50">
       <Navbar />
@@ -17,7 +96,31 @@ export default function PreInscription() {
 
         {/* Registration Form */}
         <div className="bg-white rounded-3xl shadow-sm p-8 md:p-12">
-          <form className="space-y-8">
+          {/* Success Message */}
+          {submitStatus === 'success' && (
+            <div className="mb-8 p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <strong>Succès!</strong> Votre pré-inscription a été envoyée avec succès. Nous vous contacterons dans les 24h.
+              </div>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {submitStatus === 'error' && (
+            <div className="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <strong>Erreur!</strong> {errorMessage}
+              </div>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-8">
             {/* Personal Information Section */}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
@@ -35,6 +138,8 @@ export default function PreInscription() {
                     type="text"
                     id="prenom"
                     name="prenom"
+                    value={formData.prenom}
+                    onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                     placeholder="Votre prénom"
@@ -48,6 +153,8 @@ export default function PreInscription() {
                     type="text"
                     id="nom"
                     name="nom"
+                    value={formData.nom}
+                    onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                     placeholder="Votre nom"
@@ -61,6 +168,8 @@ export default function PreInscription() {
                     type="email"
                     id="email"
                     name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                     placeholder="votre.email@exemple.com"
@@ -74,6 +183,8 @@ export default function PreInscription() {
                     type="tel"
                     id="telephone"
                     name="telephone"
+                    value={formData.telephone}
+                    onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                     placeholder="+216 XX XXX XXX"
@@ -93,35 +204,44 @@ export default function PreInscription() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="entreprise" className="block text-sm font-medium text-gray-700 mb-2">
-                    Entreprise/Organisation
+                    Entreprise/Organisation *
                   </label>
                   <input
                     type="text"
                     id="entreprise"
                     name="entreprise"
+                    value={formData.entreprise}
+                    onChange={handleInputChange}
+                    required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                     placeholder="Nom de votre entreprise"
                   />
                 </div>
                 <div>
                   <label htmlFor="poste" className="block text-sm font-medium text-gray-700 mb-2">
-                    Poste Actuel
+                    Poste Actuel *
                   </label>
                   <input
                     type="text"
                     id="poste"
                     name="poste"
+                    value={formData.poste}
+                    onChange={handleInputChange}
+                    required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                     placeholder="Votre fonction"
                   />
                 </div>
                 <div className="md:col-span-2">
                   <label htmlFor="secteur" className="block text-sm font-medium text-gray-700 mb-2">
-                    Secteur d'Activité
+                    Secteur d'Activité *
                   </label>
                   <select
                     id="secteur"
                     name="secteur"
+                    value={formData.secteur}
+                    onChange={handleInputChange}
+                    required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                   >
                     <option value="">Sélectionnez votre secteur</option>
@@ -153,7 +273,9 @@ export default function PreInscription() {
                   </label>
                   <select
                     id="formation-type"
-                    name="formation-type"
+                    name="formationType"
+                    value={formData.formationType}
+                    onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                   >
@@ -171,6 +293,8 @@ export default function PreInscription() {
                   <select
                     id="domaine"
                     name="domaine"
+                    value={formData.domaine}
+                    onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                   >
@@ -185,11 +309,14 @@ export default function PreInscription() {
                 </div>
                 <div>
                   <label htmlFor="niveau" className="block text-sm font-medium text-gray-700 mb-2">
-                    Niveau d'Expérience
+                    Niveau d'Expérience *
                   </label>
                   <select
                     id="niveau"
                     name="niveau"
+                    value={formData.niveau}
+                    onChange={handleInputChange}
+                    required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
                   >
                     <option value="">Sélectionnez votre niveau</option>
@@ -206,6 +333,8 @@ export default function PreInscription() {
                   <textarea
                     id="objectifs"
                     name="objectifs"
+                    value={formData.objectifs || ''}
+                    onChange={handleInputChange}
                     rows={4}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent resize-none"
                     placeholder="Décrivez vos objectifs et ce que vous souhaitez accomplir avec cette formation..."
@@ -225,7 +354,7 @@ export default function PreInscription() {
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Comment avez-vous entendu parler de nous ?
+                    Comment avez-vous entendu parler de nous ? *
                   </label>
                   <div className="grid md:grid-cols-2 gap-3">
                     {[
@@ -243,6 +372,9 @@ export default function PreInscription() {
                           type="radio"
                           name="source"
                           value={source.toLowerCase().replace(/[^a-z]/g, "")}
+                          checked={formData.source === source.toLowerCase().replace(/[^a-z]/g, "")}
+                          onChange={handleInputChange}
+                          required
                           className="w-4 h-4 text-cyan-400 border-gray-300 focus:ring-cyan-400"
                         />
                         <span className="ml-2 text-sm text-gray-700">{source}</span>
@@ -255,6 +387,8 @@ export default function PreInscription() {
                     type="checkbox"
                     id="newsletter"
                     name="newsletter"
+                    checked={formData.newsletter}
+                    onChange={handleInputChange}
                     className="w-4 h-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-400 mt-1"
                   />
                   <label htmlFor="newsletter" className="ml-3 text-sm text-gray-700">
@@ -288,9 +422,24 @@ export default function PreInscription() {
             <div className="text-center pt-6">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-12 py-4 rounded-full font-bold text-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                disabled={isSubmitting}
+                className={`${
+                  isSubmitting 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600'
+                } text-white px-12 py-4 rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg`}
               >
-                Envoyer ma Pré-Inscription
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Envoi en cours...
+                  </div>
+                ) : (
+                  'Envoyer ma Pré-Inscription'
+                )}
               </button>
               <p className="text-sm text-gray-500 mt-4">
                 Nous vous contacterons dans les 24h pour confirmer votre inscription

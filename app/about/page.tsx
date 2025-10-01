@@ -7,7 +7,7 @@ export default function About() {
       <Navbar />
       <main className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="px-4 py-16 max-w-7xl mx-auto">
+      <section className="px-4 pt-32 pb-16 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">À Propos</h1>

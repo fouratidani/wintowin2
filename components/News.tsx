@@ -1,31 +1,98 @@
+"use client"
+
+import { useState, useEffect } from 'react'
 import Link from "next/link"
+import { newsApi, type NewsArticle } from '@/lib/api'
+
 export default function News() {
-  const newsItems = [
+  const [newsItems, setNewsItems] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Fallback data
+  const fallbackItems = [
     { 
+      id: '1',
       title: "Nouvelle formation en développement web",
       content: "Découvrez notre nouvelle formation complète en développement web full-stack, conçue pour vous préparer aux métiers de demain.",
       hoverGradient: "from-yellow-300 via-orange-200 to-yellow-100",
-      link: "/news/formation-dev-web"
+      link: "/news/article-1"
     },
     { 
+      id: '2',
       title: "Partenariat avec des entreprises allemandes",
       content: "Win to Win annonce de nouveaux partenariats stratégiques avec des entreprises leaders en Allemagne pour le programme Ausbildung.",
       hoverGradient: "from-yellow-300 via-orange-200 to-yellow-100",
-      link: "/news/partenariat-allemagne"
+      link: "/news/article-1"
     },
     { 
+      id: '3',
       title: "Succès de nos diplômés en cybersécurité",
       content: "Plus de 95% de nos diplômés en cybersécurité ont trouvé un emploi dans les 3 mois suivant leur certification.",
       hoverGradient: "from-yellow-300 via-orange-200 to-yellow-100",
-      link: "/news/succes-cybersecurite"
+      link: "/news/article-1"
     },
     { 
+      id: '4',
       title: "Ouverture d'un nouveau centre à Casablanca",
       content: "Win to Win étend ses activités avec l'ouverture d'un nouveau centre de formation moderne à Casablanca.",
       hoverGradient: "from-yellow-300 via-orange-200 to-yellow-100",
-      link: "/news/nouveau-centre-casablanca"
+      link: "/news/article-1"
     },
   ]
+
+  // Fetch news data from API
+  useEffect(() => {
+    const fetchNewsData = async () => {
+      try {
+        setLoading(true)
+        const data = await newsApi.getAll()
+        const publishedItems = data.filter((item: NewsArticle) => item.isPublished)
+          .sort((a: NewsArticle, b: NewsArticle) => 
+            new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
+          )
+          .slice(0, 4) // Show latest 4 articles
+          .map((item: NewsArticle) => ({
+            ...item,
+            content: item.excerpt || item.content,
+            hoverGradient: "from-yellow-300 via-orange-200 to-yellow-100",
+            link: `/news/${item.id}`
+          }))
+        
+        if (publishedItems.length > 0) {
+          setNewsItems(publishedItems)
+        } else {
+          // Use fallback if no published items
+          setNewsItems(fallbackItems)
+        }
+        setError(null)
+      } catch (err) {
+        console.error('Failed to fetch news data:', err)
+        setError('Failed to load news data')
+        // Use fallback data on error
+        setNewsItems(fallbackItems)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNewsData()
+  }, [])
+
+  if (loading) {
+    return (
+      <section id="actualites" className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-300 rounded mb-4"></div>
+              <div className="h-4 bg-gray-300 rounded mb-8"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section id="actualites" className="py-20 bg-gray-50">
@@ -37,11 +104,12 @@ export default function News() {
             <p className="text-[#11023f] text-lg md:text-xl mb-8 leading-relaxed">
               Restez informés des dernières nouvelles, projets et initiatives.
             </p>
-            <button className="bg-[#00a0e8] text-white font-semibold text-lg px-8 py-4 rounded-full hover:bg-[#0088cc] transition-all duration-300">
-              <Link href="/news" passHref>
-                  Voir Plus
-              </Link>
-            </button>
+            <Link 
+              href="/news"
+              className="bg-[#00a0e8] text-white font-semibold text-lg px-8 py-4 rounded-full hover:bg-[#0088cc] transition-all duration-300 inline-block"
+            >
+              Voir Plus
+            </Link>
           </div>
 
           {/* Right Content - News Cards */}
