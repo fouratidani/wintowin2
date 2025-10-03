@@ -94,7 +94,7 @@ export default function ContentPage() {
         return
       }
 
-      const response = await fetch('/api/admin/dashboard/content', {
+      const response = await fetch('/api/dashboard/content', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -174,12 +174,12 @@ export default function ContentPage() {
       if (isEditing) {
         method = 'PATCH'
         endpoint = type === 'carousel' 
-          ? `/api/admin/carousel/${editingItem.id}`
-          : `/api/admin/news/${editingItem.id}`
+          ? `/api/carousel/${editingItem.id}`
+          : `/api/news/${editingItem.id}`
       } else {
         endpoint = type === 'carousel' 
-          ? '/api/admin/carousel'
-          : '/api/admin/news'
+          ? '/api/carousel'
+          : '/api/news'
       }
 
       let body: string | FormData
@@ -256,10 +256,10 @@ export default function ContentPage() {
       
       switch(deleteConfirm.type) {
         case 'carousel':
-          endpoint = `/api/admin/carousel/${deleteConfirm.id}`
+          endpoint = `/api/carousel/${deleteConfirm.id}`
           break
         case 'news':
-          endpoint = `/api/admin/news/${deleteConfirm.id}`
+          endpoint = `/api/news/${deleteConfirm.id}`
           break
         default:
           throw new Error('Type non supporté')
@@ -297,7 +297,7 @@ export default function ContentPage() {
     try {
       const token = localStorage.getItem('admin_token')
       
-      const response = await fetch(`/api/admin/preinscriptions/${id}`, {
+      const response = await fetch(`/api/preinscriptions/${id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

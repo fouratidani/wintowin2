@@ -63,7 +63,7 @@ export default function AnalyticsPage() {
         return
       }
 
-      const response = await fetch(`/api/admin/dashboard/analytics?period=${period}`, {
+      const response = await fetch(`/api/dashboard/analytics?period=${period}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

@@ -22,7 +22,7 @@ export default function AdminLogin() {
 
       // Verify token is still valid
       try {
-        const response = await fetch('/api/admin/dashboard/overview', {
+        const response = await fetch('/api/dashboard/overview', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -30,7 +30,7 @@ export default function AdminLogin() {
 
         if (response.ok) {
           // Token is valid, redirect to dashboard
-          router.push('/admin/dashboard')
+          router.push('/dashboard')
         } else {
           // Token is invalid, clear storage
           localStorage.removeItem('admin_token')
@@ -85,7 +85,7 @@ export default function AdminLogin() {
           referrer: document.referrer || ''
         })
         
-        router.push('/admin/dashboard')
+        router.push('/dashboard')
       } else {
         setError(data.message || 'Erreur de connexion')
         

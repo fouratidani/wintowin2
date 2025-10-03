@@ -65,7 +65,7 @@ export default function AdminDashboard() {
         return
       }
 
-      const response = await fetch('/api/admin/dashboard/overview', {
+      const response = await fetch('/api/dashboard/overview', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -57,7 +57,7 @@ export default function PrivacyPage() {
         return
       }
 
-      const response = await fetch('/api/admin/privacy', {
+      const response = await fetch('/api/privacy', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

@@ -46,7 +46,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
       // Verify token with backend
       try {
-        const response = await fetch('/api/admin/dashboard/overview', {
+        const response = await fetch('/api/dashboard/overview', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -104,7 +104,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const navigation = [
     {
       name: 'Tableau de Bord',
-      href: '/admin/dashboard',
+      href: '/dashboard',
       key: 'dashboard',
       icon: '📊'
     },
