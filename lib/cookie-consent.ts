@@ -148,7 +148,7 @@ export const trackEvent = async (event: AnalyticsEvent): Promise<void> => {
   try {
     const sessionId = getSessionId()
     
-    const response = await fetch('/api/analytics/event', {
+    const response = await fetch('/api/analytics/events', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

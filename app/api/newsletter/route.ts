@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     // Forward to the real backend's preinscription endpoint with minimal data
-    const backendUrl = 'https://winstowin.com/api/preinscription'
+    const backendUrl = 'http://localhost:5000/api/preinscription'
     
     const newsletterData = {
       prenom: 'Newsletter',

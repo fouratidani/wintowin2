@@ -3,7 +3,7 @@
 
 export async function GET() {
   try {
-    const backendUrl = 'https://winstowin.com/api/news?published=true&limit=10'
+    const backendUrl = 'http://localhost:5000/api/news?published=true&limit=10'
     
     const response = await fetch(backendUrl, {
       method: 'GET',

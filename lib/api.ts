@@ -1,7 +1,7 @@
 // API utilities for frontend-backend communication
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://your-domain.com/api' 
+  ? 'https://winstowin.com/api' 
   : 'https://winstowin.com/api';
 
 // Generic API request function

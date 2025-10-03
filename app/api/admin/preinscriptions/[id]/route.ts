@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://winstowin.com/api' 
+  ? 'http://localhost:5000/api' 
   : 'http://localhost:5000/api'
 
 export async function PATCH(

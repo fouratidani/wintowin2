@@ -3,7 +3,7 @@
 
 export async function GET() {
   try {
-    const backendUrl = 'https://winstowin.com/api/carousel/active'
+    const backendUrl = 'http://localhost:5000/api/carousel/active'
     
     const response = await fetch(backendUrl, {
       method: 'GET',
