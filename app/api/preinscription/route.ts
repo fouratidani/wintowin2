@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const formData = await request.json()
     
     // Forward to the real backend
-    const backendUrl = 'http://localhost:5000/api/preinscription'
+    const backendUrl = 'https://winstowin.com/api/preinscription'
     
     const response = await fetch(backendUrl, {
       method: 'POST',

@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const API_BASE = process.env.NODE_ENV === 'production' 
   ? 'https://your-domain.com/api' 
-  : 'http://localhost:5000/api'
+  : 'https://winstowin.com/api'
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const authHeader = request.headers.get('authorization')
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -29,7 +30,7 @@ export async function PUT(
     }
 
     // Forward to backend preinscriptions status update API
-    const response = await fetch(`${API_BASE}/dashboard/preinscriptions/${params.id}/status`, {
+    const response = await fetch(`${API_BASE}/dashboard/preinscriptions/${id}/status`, {
       method: 'PUT',
       headers: {
         'Authorization': authHeader,

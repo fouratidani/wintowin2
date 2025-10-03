@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const API_BASE = process.env.NODE_ENV === 'production' 
   ? 'https://your-domain.com/api' 
-  : 'http://localhost:5000/api'
+  : 'https://winstowin.com/api'
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const authHeader = request.headers.get('authorization')
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -19,7 +20,7 @@ export async function DELETE(
     }
 
     // Forward to backend carousel delete API
-    const response = await fetch(`${API_BASE}/carousel/${params.id}`, {
+    const response = await fetch(`${API_BASE}/carousel/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': authHeader,
@@ -55,9 +56,10 @@ export async function DELETE(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const authHeader = request.headers.get('authorization')
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -71,7 +73,7 @@ export async function PUT(
     const formData = await request.formData()
 
     // Forward to backend carousel update API
-    const response = await fetch(`${API_BASE}/carousel/${params.id}`, {
+    const response = await fetch(`${API_BASE}/carousel/${id}`, {
       method: 'PUT',
       headers: {
         'Authorization': authHeader,
@@ -108,7 +110,7 @@ export async function PUT(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // PATCH delegates to PUT for carousel updates
   return PUT(request, { params })

@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const API_BASE = process.env.NODE_ENV === 'production' 
   ? 'https://your-domain.com/api' 
-  : 'http://localhost:5000/api'
+  : 'https://winstowin.com/api'
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const authHeader = request.headers.get('authorization')
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -19,7 +20,7 @@ export async function DELETE(
     }
 
     // Forward to backend news delete API
-    const response = await fetch(`${API_BASE}/news/${params.id}`, {
+    const response = await fetch(`${API_BASE}/news/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': authHeader,
@@ -55,9 +56,10 @@ export async function DELETE(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const authHeader = request.headers.get('authorization')
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -70,7 +72,7 @@ export async function PUT(
     const body = await request.json()
 
     // Forward to backend news update API
-    const response = await fetch(`${API_BASE}/news/${params.id}`, {
+    const response = await fetch(`${API_BASE}/news/${id}`, {
       method: 'PUT',
       headers: {
         'Authorization': authHeader,
@@ -108,7 +110,7 @@ export async function PUT(
 // Add PATCH method that frontend expects
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // PATCH is same as PUT for this API
   return PUT(request, { params })
