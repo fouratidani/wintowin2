@@ -16,10 +16,35 @@ export default function AdminLogin() {
 
   // Check if already logged in
   useEffect(() => {
-    const token = localStorage.getItem('admin_token')
-    if (token) {
-      router.push('/admin/dashboard')
+    const checkAuth = async () => {
+      const token = localStorage.getItem('admin_token')
+      if (!token) return
+
+      // Verify token is still valid
+      try {
+        const response = await fetch('/api/admin/dashboard/overview', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+
+        if (response.ok) {
+          // Token is valid, redirect to dashboard
+          router.push('/admin/dashboard')
+        } else {
+          // Token is invalid, clear storage
+          localStorage.removeItem('admin_token')
+          localStorage.removeItem('admin_user')
+        }
+      } catch (error) {
+        console.error('Auth check error:', error)
+        // Clear storage on error
+        localStorage.removeItem('admin_token')
+        localStorage.removeItem('admin_user')
+      }
     }
+
+    checkAuth()
   }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {

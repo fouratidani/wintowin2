@@ -37,24 +37,52 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const activeTab = getCurrentTab()
 
   useEffect(() => {
-    const token = localStorage.getItem('admin_token')
-    if (!token) {
-      router.push('/admin/login')
-      return
+    const verifyAuth = async () => {
+      const token = localStorage.getItem('admin_token')
+      if (!token) {
+        router.push('/admin/login')
+        return
+      }
+
+      // Verify token with backend
+      try {
+        const response = await fetch('/api/admin/dashboard/overview', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+
+        if (response.status === 401) {
+          // Token is invalid/expired
+          localStorage.removeItem('admin_token')
+          localStorage.removeItem('admin_user')
+          router.push('/admin/login')
+          return
+        }
+
+        // Token is valid, load user data
+        const userData = JSON.parse(localStorage.getItem('admin_user') || '{}')
+        if (userData.id) {
+          setUser(userData)
+        } else {
+          // User data is missing, redirect to login
+          localStorage.removeItem('admin_token')
+          localStorage.removeItem('admin_user')
+          router.push('/admin/login')
+          return
+        }
+      } catch (error) {
+        console.error('Error verifying auth:', error)
+        localStorage.removeItem('admin_token')
+        localStorage.removeItem('admin_user')
+        router.push('/admin/login')
+        return
+      }
+
+      setIsLoading(false)
     }
 
-    // Verify token and get user info
-    // This would normally make an API call to verify the token
-    try {
-      const userData = JSON.parse(localStorage.getItem('admin_user') || '{}')
-      setUser(userData)
-    } catch (error) {
-      console.error('Error loading user data:', error)
-      router.push('/admin/login')
-      return
-    }
-
-    setIsLoading(false)
+    verifyAuth()
   }, [router])
 
   const handleLogout = () => {

@@ -60,11 +60,24 @@ export default function AdminDashboard() {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('admin_token')
+      if (!token) {
+        window.location.href = '/admin/login'
+        return
+      }
+
       const response = await fetch('/api/admin/dashboard/overview', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
+
+      if (response.status === 401) {
+        // Token is invalid/expired
+        localStorage.removeItem('admin_token')
+        localStorage.removeItem('admin_user')
+        window.location.href = '/admin/login'
+        return
+      }
 
       const result = await response.json()
       
