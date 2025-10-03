@@ -73,8 +73,8 @@ export default function AdminLogin() {
       const data = await response.json()
 
       if (data.success) {
-        localStorage.setItem('admin_token', data.token)
-        localStorage.setItem('admin_user', JSON.stringify(data.user))
+        localStorage.setItem('admin_token', data.data.token)
+        localStorage.setItem('admin_user', JSON.stringify(data.data.user))
         
         trackEvent({
           eventType: 'conversion',

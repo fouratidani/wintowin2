@@ -29,16 +29,8 @@ export async function POST(request: NextRequest) {
     const data = await response.json()
 
     if (response.ok && data.success) {
-      // The backend returns data in a nested 'data' property
-      return NextResponse.json({
-        success: true,
-        token: data.data.token,
-        user: {
-          id: data.data.user.id,
-          email: data.data.user.email,
-          role: data.data.user.role
-        }
-      })
+      // Pass through the backend response structure
+      return NextResponse.json(data)
     } else {
       return NextResponse.json(
         { 
