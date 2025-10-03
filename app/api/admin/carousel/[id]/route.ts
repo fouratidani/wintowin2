@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://your-domain.com/api' 
-  : 'https://winstowin.com/api'
+  ? 'http://localhost:5000/api' 
+  : 'http://localhost:5000/api'
 
 export async function DELETE(
   request: NextRequest,

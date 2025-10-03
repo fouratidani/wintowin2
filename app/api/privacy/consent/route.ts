@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://your-domain.com/api' 
+  ? 'http://localhost:5000/api' 
   : 'https://winstowin.com/api'
 
 // Helper function to get client IP
