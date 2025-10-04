@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Forward to backend newsletter subscribe API
+    // Forward to backend newsletter subscribe API (this is the correct endpoint)
     const response = await fetch(`${API_BASE}/newsletter/subscribe`, {
       method: 'POST',
       headers: {

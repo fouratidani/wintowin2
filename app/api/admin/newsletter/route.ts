@@ -15,8 +15,13 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Forward to backend content API to get newsletter data
-    const response = await fetch(`${API_BASE}/dashboard/content`, {
+    // Get query parameters for pagination
+    const { searchParams } = new URL(request.url)
+    const page = searchParams.get('page') || '1'
+    const limit = searchParams.get('limit') || '50'
+
+    // Forward to backend newsletter subscribers API (this is the correct endpoint)
+    const response = await fetch(`${API_BASE}/newsletter/subscribers?page=${page}&limit=${limit}`, {
       method: 'GET',
       headers: {
         'Authorization': authHeader,
@@ -36,43 +41,28 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json()
     
-    // Also fetch all newsletter subscribers
-    const subscribersResponse = await fetch(`${API_BASE}/newsletter/subscribers?limit=100`, {
-      method: 'GET',
-      headers: {
-        'Authorization': authHeader,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    let subscribers = []
-    if (subscribersResponse.ok) {
-      const subscribersData = await subscribersResponse.json()
-      subscribers = (subscribersData.data?.subscribers || []).map((sub: any) => ({
-        id: sub.id,
-        email: sub.email,
-        is_active: sub.is_active,
-        created_at: sub.created_at,
-        last_activity: sub.updated_at || sub.created_at
-      }))
-    }
-    
-    // Transform backend data to newsletter-specific format
-    const newsletterData = {
-      subscribers: subscribers,
-      stats: {
-        total_subscribers: data.data?.newsletter_data?.total_subscribers || 0,
-        active_subscribers: data.data?.newsletter_data?.active_subscribers || 0,
-        unsubscribed: data.data?.newsletter_data?.unsubscribed || 0,
-        growth_rate: 5.2 // Mock data - implement later
-      },
-      campaigns: data.data?.newsletter_data?.recent_campaigns || []
-    }
-    
-    return NextResponse.json({
+    // Transform backend response to match frontend expectations
+    const transformedData = {
       success: true,
-      data: newsletterData
-    })
+      data: {
+        subscribers: data.data.subscribers.map((sub: any) => ({
+          id: sub.id,
+          email: sub.email,
+          is_active: sub.is_active,
+          created_at: sub.created_at,
+          last_activity: sub.updated_at
+        })),
+        stats: {
+          total_subscribers: data.data.pagination.total,
+          active_subscribers: data.data.pagination.active,
+          unsubscribed: data.data.pagination.total - data.data.pagination.active,
+          growth_rate: 0 // You can calculate this based on historical data
+        },
+        campaigns: [] // Newsletter campaigns would come from a different endpoint
+      }
+    }
+
+    return NextResponse.json(transformedData)
 
   } catch (error) {
     console.error('Newsletter API error:', error)
@@ -80,7 +70,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       { 
         success: false, 
-        message: 'Erreur serveur lors du chargement des données newsletter' 
+        message: 'Erreur serveur lors de la récupération des données newsletter' 
       },
       { status: 500 }
     )

@@ -50,7 +50,7 @@ export default function NewsletterPage() {
         return
       }
 
-      const response = await fetch('/api/newsletter', {
+      const response = await fetch('/api/admin/newsletter', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
