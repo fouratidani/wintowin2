@@ -14,26 +14,29 @@ const poppins = Poppins({
   variable: "--font-poppins",
 })
 
-export const metadata: Metadata = generateSEO({
-  title: "Win2Win - Formation Professionnelle & Ausbildung en Allemagne",
-  description: "Win2Win vous accompagne dans votre apprentissage de l'allemand et de l'italien pour réussir votre Ausbildung en Allemagne. Formations professionnelles adaptées à vos besoins.",
-  canonical: SITE_CONFIG.domain,
-  keywords: [
-    'formation allemand',
-    'ausbildung allemagne', 
-    'formation professionnelle',
-    'apprentissage langue',
-    'win2win',
-    'formation italien',
-    'coaching carrière',
-    'emploi allemagne',
-    'certification linguistique',
-    'formation continue',
-    'centre formation',
-    'cours langue',
-    'formation sur mesure'
-  ]
-})
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_CONFIG.domain),
+  ...generateSEO({
+    title: "Win2Win - Formation Professionnelle & Ausbildung en Allemagne",
+    description: "Win2Win vous accompagne dans votre apprentissage de l'allemand et de l'italien pour réussir votre Ausbildung en Allemagne. Formations professionnelles adaptées à vos besoins.",
+    canonical: SITE_CONFIG.domain,
+    keywords: [
+      'formation allemand',
+      'ausbildung allemagne', 
+      'formation professionnelle',
+      'apprentissage langue',
+      'win2win',
+      'formation italien',
+      'coaching carrière',
+      'emploi allemagne',
+      'certification linguistique',
+      'formation continue',
+      'centre formation',
+      'cours langue',
+      'formation sur mesure'
+    ]
+  })
+}
 
 export const viewport: Viewport = {
   width: 'device-width',

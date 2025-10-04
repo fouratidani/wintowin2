@@ -125,13 +125,6 @@ export function generateSEO(config: Partial<SEOConfig> = {}): Metadata {
     category: 'Education',
     classification: 'Education, Training, Professional Development',
     
-    // Mobile
-    viewport: {
-      width: 'device-width',
-      initialScale: 1,
-      maximumScale: 5,
-    },
-    
     // Icons
     icons: {
       icon: [
