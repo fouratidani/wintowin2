@@ -65,7 +65,7 @@ export default function PreinscriptionsPage() {
         return
       }
 
-      const response = await fetch('/api/preinscriptions', {
+      const response = await fetch('/api/preinscription', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -122,7 +122,7 @@ export default function PreinscriptionsPage() {
         return
       }
       
-      const response = await fetch(`/api/preinscriptions/${id}`, {
+      const response = await fetch(`/api/preinscription/${id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

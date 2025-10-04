@@ -297,7 +297,7 @@ export default function ContentPage() {
     try {
       const token = localStorage.getItem('admin_token')
       
-      const response = await fetch(`/api/preinscriptions/${id}`, {
+      const response = await fetch(`/api/preinscription/${id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
