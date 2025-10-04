@@ -104,7 +104,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const navigation = [
     {
       name: 'Tableau de Bord',
-      href: '/dashboard',
+      href: '/admin/dashboard',
       key: 'dashboard',
       icon: '📊'
     },

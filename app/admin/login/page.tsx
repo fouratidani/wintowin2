@@ -30,7 +30,7 @@ export default function AdminLogin() {
 
         if (response.ok) {
           // Token is valid, redirect to dashboard
-          router.push('/dashboard')
+          router.push('/admin/dashboard')
         } else {
           // Token is invalid, clear storage
           localStorage.removeItem('admin_token')
@@ -85,7 +85,7 @@ export default function AdminLogin() {
           referrer: document.referrer || ''
         })
         
-        router.push('/dashboard')
+        router.push('/admin/dashboard')
       } else {
         setError(data.message || 'Erreur de connexion')
         
