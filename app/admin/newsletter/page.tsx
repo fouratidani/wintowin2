@@ -68,7 +68,19 @@ export default function NewsletterPage() {
 
       const result = await response.json()
       if (result.success) {
-        setData(result.data)
+        // Transform backend response to match frontend expectations
+        const transformedData = {
+          subscribers: result.data.subscribers || [],
+          stats: {
+            total_subscribers: result.data.pagination?.total || 0,
+            active_subscribers: result.data.pagination?.active || 0,
+            unsubscribed: (result.data.pagination?.total || 0) - (result.data.pagination?.active || 0),
+            growth_rate: 0 // Could be calculated from historical data
+          },
+          campaigns: [] // Newsletter campaigns would come from a different endpoint
+        }
+        
+        setData(transformedData)
         setError('')
       } else {
         setError(result.message || 'Erreur inconnue')

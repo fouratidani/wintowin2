@@ -79,7 +79,7 @@ export default function SystemPage() {
         return
       }
 
-      const response = await fetch('/api/admin/dashboard/system', {
+      const response = await fetch('/api/dashboard/system', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
