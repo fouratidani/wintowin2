@@ -5,6 +5,8 @@ import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
 import { useCookieConsent } from "../../contexts/CookieConsentContext"
 import { ConsentSettings } from "../../lib/cookie-consent"
+import JSONLD from "../../components/JSONLD"
+import { generateWebPageSchema } from "../../lib/seo"
 
 export default function CookiePreferences() {
   const { consent, updateConsent, clearAllConsent } = useCookieConsent()
@@ -69,8 +71,19 @@ export default function CookiePreferences() {
     }
   }
 
+  const pageSchema = generateWebPageSchema({
+    title: "Préférences de Cookies - Win2Win",
+    description: "Gérez vos préférences de cookies et personnalisez votre expérience sur Win2Win.",
+    url: "/cookie-preferences",
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Préférences de Cookies", url: "/cookie-preferences" }
+    ]
+  })
+
   return (
     <>
+      <JSONLD data={pageSchema} />
       <Navbar />
       <main className="min-h-screen bg-gray-50">
         {/* Hero Section */}

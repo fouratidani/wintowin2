@@ -1,10 +1,13 @@
 'use client'
 
 import { useState, useEffect } from "react"
+import { Metadata } from 'next'
 import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
 import Link from "next/link"
 import { newsApi } from "../../lib/api"
+import JSONLD from "../../components/JSONLD"
+import { generateWebPageSchema } from "../../lib/seo"
 
 interface NewsArticle {
   id: number
@@ -28,6 +31,16 @@ export default function News() {
   const [selectedCategory, setSelectedCategory] = useState("Toutes")
   const [displayCount, setDisplayCount] = useState(6)
   const [categories, setCategories] = useState<string[]>(["Toutes"])
+
+  const pageSchema = generateWebPageSchema({
+    title: "Actualités et News - Win2Win Formation",
+    description: "Découvrez les dernières actualités de Win2Win, conseils pour votre formation en allemand.",
+    url: "/news",
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Actualités", url: "/news" }
+    ]
+  })
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -145,6 +158,7 @@ export default function News() {
 
   return (
     <>
+      <JSONLD data={pageSchema} />
       <Navbar />
       <main className="min-h-screen bg-gray-50">
       {/* Hero Section */}

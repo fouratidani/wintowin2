@@ -65,7 +65,7 @@ export const preinscriptionApi = {
 
 // Newsletter API functions - Frontend only subscribes
 export const newsletterApi = {
-  subscribe: (email: string) => apiRequest('/newsletter', {
+  subscribe: (email: string) => apiRequest('/newsletter/subscribe', {
     method: 'POST',
     body: JSON.stringify({ email }),
   }),

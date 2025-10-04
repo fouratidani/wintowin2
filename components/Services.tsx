@@ -4,9 +4,9 @@ export default function Services() {
     <section id="services" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-right mb-16">
+        <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-semibold text-[#11023f] mb-8">Nos Services</h2>
-          <div className="max-w-4xl ml-auto">
+          <div className="max-w-4xl mx-auto">
             <p className="text-[#11023f] text-xl md:text-2xl leading-relaxed mb-8">
               Nous offrons une large gamme de services adaptés à différentes catégories d'entités, notamment{" "}
               <strong>les entreprises</strong>, les <strong>centres de formation</strong> et bien d'

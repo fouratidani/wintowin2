@@ -8,44 +8,66 @@ export default function Formations() {
   
   const formations = [
     {
-      title: "Formation en Développement Web",
+      id: "1",
+      title: "Langues Étrangères",
       description:
-        "Apprenez les technologies modernes du web : HTML5, CSS3, JavaScript, React. Formation pratique avec projets réels.",
+        "Allemand jusqu'au niveau B2, préparation Ausbildung, études et travail en Allemagne. Anglais et Italien disponibles.",
       color: "border-[#ffae00]",
       size: "large",
     },
     {
-      title: "Formation Marketing Digital",
+      id: "2",
+      title: "Cybersécurité",
       description:
-        "Maîtrisez les stratégies du marketing numérique, SEO, réseaux sociaux et publicité en ligne.",
+        "Protégez les systèmes et réseaux contre les menaces avec les dernières techniques de sécurité informatique.",
       color: "border-[#00a0e8]",
       size: "small",
     },
     {
-      title: "Formation Design UX/UI",
+      id: "3",
+      title: "Power BI",
       description:
-        "Créez des interfaces utilisateur intuitives et esthétiques avec les outils de design modernes.",
+        "Analyse des données & reporting interactif. Maîtrisez la visualisation de données professionnelle.",
       color: "border-[#00a0e8]",
       size: "small",
     },
     {
-      title: "Formation Data Science",
+      id: "4",
+      title: "IA & Développement",
       description:
-        "Analysez et visualisez les données avec Python, R et des outils d'analyse avancés.",
+        "Programmation, automatisation, intelligence artificielle. Développez des solutions innovantes et intelligentes.",
       color: "border-[#ffae00]",
       size: "large",
     },
     {
-      title: "Formation Cybersécurité",
+      id: "5",
+      title: "Développement Web",
       description:
-        "Protégez les systèmes et réseaux contre les menaces avec les dernières techniques de sécurité.",
+        "HTML, CSS, JavaScript, PHP, C++... Maîtrisez les technologies web modernes pour créer des applications robustes.",
       color: "border-[#00a0e8]",
       size: "small",
     },
     {
-      title: "Formation IA & Machine Learning",
+      id: "6",
+      title: "Création de Sites Web",
       description:
-        "Développez des solutions intelligentes avec l'intelligence artificielle et l'apprentissage automatique.",
+        "WordPress, e-commerce, plateformes dynamiques. Créez des sites web professionnels et fonctionnels.",
+      color: "border-[#00a0e8]",
+      size: "small",
+    },
+    {
+      id: "7",
+      title: "Web Design & Graphisme",
+      description:
+        "UI/UX, identité visuelle. Concevez des interfaces esthétiques et une identité de marque forte.",
+      color: "border-[#ffae00]",
+      size: "large",
+    },
+    {
+      id: "8",
+      title: "Montage Vidéo",
+      description:
+        "Création de contenus professionnels et créatifs. Maîtrisez les outils de montage vidéo moderne.",
       color: "border-[#00a0e8]",
       size: "small",
     },
@@ -105,7 +127,7 @@ export default function Formations() {
                     <h3 className="text-xl font-bold text-black mb-4 font-kontora">{formation.title}</h3>
                     <p className="text-black text-sm mb-6 leading-relaxed font-poppins">{formation.description}</p>
                     <Link
-                      href="/formations"
+                      href={`/formations/${formation.id}`}
                       className={`text-sm font-bold font-poppins transition-all duration-300 ${
                         formation.color === "border-[#ffae00]" 
                           ? "text-[#ffae00] hover:text-[#e69a00]" 

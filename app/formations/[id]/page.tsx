@@ -1,64 +1,100 @@
+import { Metadata } from 'next'
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import JSONLD from "../../../components/JSONLD"
+import { generateSEO, generateCourseSchema, generateWebPageSchema, SITE_CONFIG } from "../../../lib/seo"
 
 // Sample formation data - in a real app, this would come from a database or API
 const formations = {
   "1": {
     id: "1",
-    title: "Formation en Développement Web",
-    description: "Une formation complète pour apprendre le développement web moderne avec React, Node.js et les technologies actuelles du marché.",
+    title: "Langues Étrangères",
+    description: "Allemand jusqu'au niveau B2, préparation Ausbildung, études et travail en Allemagne. Anglais et Italien disponibles.",
     instructor: {
-      name: "Ahmed Benali",
-      occupation: "Développeur Full Stack Senior",
-      details: "Expert en développement web avec plus de 8 ans d'expérience. Spécialisé dans React, Node.js et les architectures cloud modernes."
+      name: "Professeur Müller",
+      occupation: "Professeur d'Allemand Certifié",
+      details: "Expert en enseignement de l'allemand avec plus de 10 ans d'expérience. Spécialisé dans la préparation Ausbildung et certification B2."
     },
-    reviews: 25
+    reviews: 42
   },
   "2": {
     id: "2",
-    title: "Formation en Data Science",
-    description: "Apprenez l'analyse de données, le machine learning et l'intelligence artificielle avec Python et les outils modernes de data science.",
-    instructor: {
-      name: "Sarah Mansouri",
-      occupation: "Data Scientist",
-      details: "Experte en data science et machine learning avec une expérience de 6 ans dans l'industrie technologique et la recherche."
-    },
-    reviews: 18
-  },
-  "3": {
-    id: "3",
-    title: "Formation en Cybersécurité",
-    description: "Formation complète sur la sécurité informatique, incluant la protection des réseaux, la cryptographie et la gestion des incidents de sécurité.",
+    title: "Cybersécurité",
+    description: "Formation complète sur la sécurité informatique, protection des systèmes et réseaux contre les menaces.",
     instructor: {
       name: "Mohamed Triki",
       occupation: "Expert en Cybersécurité",
-      details: "Consultant en cybersécurité avec plus de 10 ans d'expérience dans la protection des infrastructures critiques."
+      details: "Consultant en cybersécurité avec plus de 8 ans d'expérience dans la protection des infrastructures critiques et la gestion des incidents."
     },
-    reviews: 32
+    reviews: 38
+  },
+  "3": {
+    id: "3",
+    title: "Power BI",
+    description: "Analyse des données & reporting interactif. Maîtrisez la visualisation de données professionnelle.",
+    instructor: {
+      name: "Sarah Mansouri",
+      occupation: "Experte en Business Intelligence",
+      details: "Spécialiste Power BI et analyse de données avec 6 ans d'expérience dans l'optimisation des processus décisionnels."
+    },
+    reviews: 29
   },
   "4": {
     id: "4",
-    title: "Formation en Design UX/UI",
-    description: "Maîtrisez les principes du design d'expérience utilisateur et d'interface utilisateur pour créer des applications modernes et intuitives.",
+    title: "IA & Développement",
+    description: "Programmation, automatisation, intelligence artificielle. Développez des solutions innovantes et intelligentes.",
     instructor: {
-      name: "Leila Gharbi",
-      occupation: "UX/UI Designer Senior",
-      details: "Designer expérimentée avec plus de 7 ans dans la conception d'interfaces utilisateur pour des applications web et mobile."
+      name: "Ahmed Benali",
+      occupation: "Développeur IA Senior",
+      details: "Expert en intelligence artificielle et développement avec plus de 7 ans d'expérience en machine learning et automatisation."
     },
-    reviews: 22
+    reviews: 35
   },
   "5": {
     id: "5",
-    title: "Formation en Marketing Digital",
-    description: "Découvrez les stratégies de marketing digital, SEO, réseaux sociaux et publicité en ligne pour développer votre présence numérique.",
+    title: "Développement Web",
+    description: "HTML, CSS, JavaScript, PHP, C++... Maîtrisez les technologies web modernes pour créer des applications robustes.",
     instructor: {
       name: "Karim Bouazizi",
-      occupation: "Expert en Marketing Digital",
-      details: "Spécialiste en marketing digital avec 9 ans d'expérience en stratégies de croissance et acquisition client."
+      occupation: "Développeur Full Stack",
+      details: "Développeur expérimenté avec 9 ans d'expérience en technologies web modernes et architectures d'applications."
     },
-    reviews: 28
+    reviews: 44
+  },
+  "6": {
+    id: "6",
+    title: "Création de Sites Web",
+    description: "WordPress, e-commerce, plateformes dynamiques. Créez des sites web professionnels et fonctionnels.",
+    instructor: {
+      name: "Leila Gharbi",
+      occupation: "Spécialiste WordPress & E-commerce",
+      details: "Experte en création de sites web avec 5 ans d'expérience en WordPress, WooCommerce et plateformes e-commerce."
+    },
+    reviews: 31
+  },
+  "7": {
+    id: "7",
+    title: "Web Design & Graphisme",
+    description: "UI/UX, identité visuelle. Concevez des interfaces esthétiques et une identité de marque forte.",
+    instructor: {
+      name: "Amine Sellami",
+      occupation: "Designer UX/UI Senior",
+      details: "Designer créatif avec 6 ans d'expérience en conception d'interfaces utilisateur et identité visuelle de marque."
+    },
+    reviews: 27
+  },
+  "8": {
+    id: "8",
+    title: "Montage Vidéo",
+    description: "Création de contenus professionnels et créatifs. Maîtrisez les outils de montage vidéo moderne.",
+    instructor: {
+      name: "Youssef Khedri",
+      occupation: "Monteur Vidéo Professionnel",
+      details: "Spécialiste en montage vidéo avec 4 ans d'expérience en production de contenu créatif et publicitaire."
+    },
+    reviews: 23
   }
 }
 
@@ -66,6 +102,31 @@ interface PageProps {
   params: {
     id: string
   }
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const formation = formations[params.id as keyof typeof formations]
+  
+  if (!formation) {
+    return generateSEO({
+      title: "Formation non trouvée - Win2Win",
+      description: "La formation demandée n'existe pas.",
+    })
+  }
+
+  return generateSEO({
+    title: `${formation.title} - Win2Win Formation`,
+    description: formation.description,
+    canonical: `${SITE_CONFIG.domain}/formations/${params.id}`,
+    keywords: [
+      formation.title.toLowerCase(),
+      'formation professionnelle',
+      'win2win',
+      'certification',
+      'apprentissage',
+      'cours en ligne'
+    ]
+  })
 }
 
 export default function FormationDetails({ params }: PageProps) {
@@ -80,8 +141,31 @@ export default function FormationDetails({ params }: PageProps) {
     .filter(f => f.id !== params.id)
     .slice(0, 3)
 
+  // Generate structured data
+  const courseSchema = generateCourseSchema({
+    name: formation.title,
+    description: formation.description,
+    duration: "6 mois", // You could add this to the formations data
+    level: "Tous niveaux",
+    category: "Formation Professionnelle",
+    url: `/formations/${params.id}`
+  })
+
+  const pageSchema = generateWebPageSchema({
+    title: `${formation.title} - Win2Win Formation`,
+    description: formation.description,
+    url: `/formations/${params.id}`,
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Formations", url: "/formations" },
+      { name: formation.title, url: `/formations/${params.id}` }
+    ]
+  })
+
   return (
     <>
+      <JSONLD data={courseSchema} />
+      <JSONLD data={pageSchema} />
       <Navbar />
       <main className="min-h-screen bg-white">
         {/* Hero Section with Blue Background */}

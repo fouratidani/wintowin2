@@ -9,8 +9,7 @@ export default function About() {
           <div>
             <h2 className="text-5xl md:text-6xl font-semibold text-[#11023f] mb-8 font-kontora">À Propos</h2>
             <p className="text-[#11023f] text-xl md:text-2xl leading-relaxed mb-8 font-poppins">
-              Chez Win to Win, nous transformons le potentiel en succès. Grâce à notre expertise technique et notre
-              approche sur-mesure, nous accompagnons chacun de nos partenaires vers l'excellence.
+              Bienvenue sur WIN TO WIN ! Votre partenaire de confiance pour maîtriser l’allemand et l’italien, avec un accompagnement sur mesure pour réussir votre Ausbildung en Allemagne.
             </p>
             <Link href="/about" passHref>
               <button className="bg-[#00a0e8] text-white font-medium text-lg px-8 py-4 rounded-full hover:bg-[#0088cc] transition-all duration-300 font-poppins">

@@ -1,8 +1,36 @@
+import { Metadata } from 'next'
 import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
 import Link from "next/link"
+import JSONLD from "../../components/JSONLD"
+import { generateSEO, generateWebPageSchema, SITE_CONFIG } from "../../lib/seo"
+
+export const metadata: Metadata = generateSEO({
+  title: "Nos Services - Win2Win Formation Professionnelle",
+  description: "Découvrez nos services adaptés aux entreprises, centres de formation, étudiants et institutions pour votre formation en allemand et réussite en Allemagne.",
+  canonical: `${SITE_CONFIG.domain}/services`,
+  keywords: [
+    'services formation',
+    'formation entreprise',
+    'formation étudiants',
+    'centre formation allemand',
+    'services institutions',
+    'formation sur mesure',
+    'ausbildung services'
+  ]
+})
 
 export default function Services() {
+  const pageSchema = generateWebPageSchema({
+    title: "Nos Services - Win2Win Formation Professionnelle",
+    description: "Découvrez nos services adaptés aux entreprises, centres de formation, étudiants et institutions.",
+    url: "/services",
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Services", url: "/services" }
+    ]
+  })
+
   const services = [
     {
       title: "Pour Les Entreprises",
@@ -32,6 +60,7 @@ export default function Services() {
 
   return (
     <>
+      <JSONLD data={pageSchema} />
       <Navbar />
       <main className="min-h-screen bg-gray-50">
       {/* Hero Section */}

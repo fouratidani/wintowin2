@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
 import { preinscriptionApi, type PreinscriptionData } from '@/lib/api'
+import JSONLD from "../../components/JSONLD"
+import { generateWebPageSchema } from "../../lib/seo"
 
 export default function PreInscription() {
   const [formData, setFormData] = useState<PreinscriptionData>({
@@ -80,8 +82,21 @@ export default function PreInscription() {
       setIsSubmitting(false)
     }
   }
+
+  const pageSchema = generateWebPageSchema({
+    title: "Pré-inscription Formation - Win2Win",
+    description: "Rejoignez nos formations de qualité et développez vos compétences avec Win2Win. Remplissez ce formulaire pour commencer votre parcours d'apprentissage.",
+    url: "/preinscription",
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Pré-inscription", url: "/preinscription" }
+    ]
+  })
+
   return (
-    <main className="min-h-screen bg-gray-50">
+    <>
+      <JSONLD data={pageSchema} />
+      <main className="min-h-screen bg-gray-50">
       <Navbar />
       {/* Main Content Section */}
       <section className="px-4 py-16 max-w-4xl mx-auto">
@@ -448,7 +463,8 @@ export default function PreInscription() {
           </form>
         </div>
       </section>
-<Footer/>
-    </main>
+      <Footer/>
+      </main>
+    </>
   )
 }

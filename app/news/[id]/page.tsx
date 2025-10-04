@@ -6,6 +6,8 @@ import Navbar from "../../../components/Navbar"
 import Footer from "../../../components/Footer"
 import Link from "next/link"
 import { newsApi } from "../../../lib/api"
+import JSONLD from "../../../components/JSONLD"
+import { generateArticleSchema, generateWebPageSchema } from "../../../lib/seo"
 
 interface NewsArticle {
   id: number
@@ -162,8 +164,32 @@ export default function ArticlePage() {
     )
   }
 
+  // Generate structured data for the article
+  const articleId = params?.id || 'unknown'
+  const articleSchema = generateArticleSchema({
+    title: article.title,
+    description: article.excerpt,
+    publishDate: article.publishDate,
+    author: "Win2Win",
+    url: `/news/${articleId}`,
+    image: article.image
+  })
+
+  const pageSchema = generateWebPageSchema({
+    title: article.title,
+    description: article.excerpt,
+    url: `/news/${articleId}`,
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Actualités", url: "/news" },
+      { name: article.title, url: `/news/${articleId}` }
+    ]
+  })
+
   return (
     <>
+      <JSONLD data={articleSchema} />
+      <JSONLD data={pageSchema} />
       <Navbar />
       <main className="min-h-screen bg-gray-50">
         {/* Breadcrumb */}

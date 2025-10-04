@@ -1,8 +1,38 @@
+import { Metadata } from 'next'
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import JSONLD from "../../../components/JSONLD"
+import { generateSEO, generateWebPageSchema, SITE_CONFIG } from "../../../lib/seo"
+
+export const metadata: Metadata = generateSEO({
+  title: "Services pour Ministères et Institutions - Win2Win",
+  description: "Solutions de formation institutionnelle en allemand et italien. Programmes adaptés aux ministères et institutions publiques.",
+  canonical: `${SITE_CONFIG.domain}/services/institutions`,
+  keywords: [
+    'formation institutions',
+    'ministères formation',
+    'formation publique',
+    'institutions allemand',
+    'formation gouvernementale'
+  ]
+})
+
 export default function Institutions() {
+  const pageSchema = generateWebPageSchema({
+    title: "Services pour Ministères et Institutions - Win2Win",
+    description: "Solutions de formation institutionnelle en allemand et italien.",
+    url: "/services/institutions",
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Services", url: "/services" },
+      { name: "Institutions", url: "/services/institutions" }
+    ]
+  })
+
   return (
-    <main className="min-h-screen bg-white">
+    <>
+      <JSONLD data={pageSchema} />
+      <main className="min-h-screen bg-white">
         <Navbar/>
       {/* Hero Section with Blue Background */}
       <section className="bg-gradient-to-r from-cyan-400 to-blue-500 px-4 py-16">
@@ -100,7 +130,8 @@ export default function Institutions() {
         </div>
       </section>
 
-    <Footer/>
-    </main>
+      <Footer/>
+      </main>
+    </>
   )
 }

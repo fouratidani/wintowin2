@@ -1,9 +1,39 @@
+import { Metadata } from 'next'
 import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
+import JSONLD from "../../components/JSONLD"
+import { generateSEO, generateWebPageSchema, SITE_CONFIG } from "../../lib/seo"
+
+export const metadata: Metadata = generateSEO({
+  title: "Politique de Confidentialité - Win2Win",
+  description: "Découvrez notre politique de confidentialité et comment nous protégeons vos données personnelles conformément au RGPD. Transparence et respect de votre vie privée.",
+  canonical: `${SITE_CONFIG.domain}/privacy-policy`,
+  keywords: [
+    'politique confidentialité',
+    'protection données',
+    'RGPD',
+    'vie privée',
+    'cookies',
+    'données personnelles',
+    'confidentialité win2win'
+  ],
+  robots: 'index, follow'
+})
 
 export default function PrivacyPolicy() {
+  const pageSchema = generateWebPageSchema({
+    title: "Politique de Confidentialité - Win2Win",
+    description: "Notre politique de confidentialité et comment nous protégeons vos données personnelles conformément au RGPD.",
+    url: "/privacy-policy",
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Politique de Confidentialité", url: "/privacy-policy" }
+    ]
+  })
+
   return (
     <>
+      <JSONLD data={pageSchema} />
       <Navbar />
       <main className="min-h-screen bg-gray-50">
         {/* Hero Section */}

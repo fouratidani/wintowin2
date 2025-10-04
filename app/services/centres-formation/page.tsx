@@ -1,8 +1,38 @@
+import { Metadata } from 'next'
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import JSONLD from "../../../components/JSONLD"
+import { generateSEO, generateWebPageSchema, SITE_CONFIG } from "../../../lib/seo"
+
+export const metadata: Metadata = generateSEO({
+  title: "Services pour Centres de Formation - Win2Win",
+  description: "Solutions de formation et partenariats pour centres de formation. Programmes d'accompagnement en allemand et italien pour vos apprenants.",
+  canonical: `${SITE_CONFIG.domain}/services/centres-formation`,
+  keywords: [
+    'centre formation partenariat',
+    'formation allemand centre',
+    'programme formation',
+    'partenariat éducatif',
+    'formation institutionnelle'
+  ]
+})
+
 export default function CentresFormation() {
+  const pageSchema = generateWebPageSchema({
+    title: "Services pour Centres de Formation - Win2Win",
+    description: "Solutions de formation et partenariats pour centres de formation.",
+    url: "/services/centres-formation",
+    breadcrumbs: [
+      { name: "Accueil", url: "/" },
+      { name: "Services", url: "/services" },
+      { name: "Centres de Formation", url: "/services/centres-formation" }
+    ]
+  })
+
   return (
-    <main className="min-h-screen bg-white">
+    <>
+      <JSONLD data={pageSchema} />
+      <main className="min-h-screen bg-white">
         <Navbar/>
       {/* Hero Section with Blue Background */}
       <section className="bg-gradient-to-r from-cyan-400 to-blue-500 px-4 py-16">
@@ -100,7 +130,8 @@ export default function CentresFormation() {
         </div>
       </section>
 
-    <Footer/>
-    </main>
+      <Footer/>
+      </main>
+    </>
   )
 }
