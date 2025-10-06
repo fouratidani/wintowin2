@@ -109,9 +109,31 @@ export default function News() {
             excerpt: "Découvrez notre nouveau programme de formation en IA, conçu pour les professionnels souhaitant maîtriser les technologies de demain.",
             category: "Formation",
             isPublished: true,
-            publishDate: "2025-09-15T00:00:00.000Z",
+            publishDate: new Date().toISOString(), // Current date to show "Nouveau" badge
             readTime: "3 min",
-            createdAt: "2025-09-15T00:00:00.000Z"
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: 2,
+            title: "Nouveaux Partenariats avec des Entreprises Allemandes",
+            content: "Win2Win renforce ses liens avec l'Allemagne...",
+            excerpt: "Découvrez nos nouveaux partenariats qui ouvrent de nouvelles opportunités pour nos étudiants en Allemagne.",
+            category: "Partenariat",
+            isPublished: true,
+            publishDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+            readTime: "5 min",
+            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: 3,
+            title: "Réussites de nos Étudiants en Cybersécurité",
+            content: "Nos diplômés excellent dans le domaine de la cybersécurité...",
+            excerpt: "Témoignages inspirants de nos anciens étudiants qui ont réussi leur carrière en cybersécurité.",
+            category: "Témoignage",
+            isPublished: true,
+            publishDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago (no badge)
+            readTime: "4 min",
+            createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
           }
         ]
         setNewsArticles(fallbackArticles)
@@ -146,6 +168,14 @@ export default function News() {
     const wordCount = content.split(' ').length
     const readTime = Math.ceil(wordCount / wordsPerMinute)
     return `${readTime} min`
+  }
+
+  const isNewArticle = (publishDate: string) => {
+    const articleDate = new Date(publishDate)
+    const currentDate = new Date()
+    const diffInTime = currentDate.getTime() - articleDate.getTime()
+    const diffInDays = diffInTime / (1000 * 3600 * 24)
+    return diffInDays <= 3
   }
 
   const handleLoadMore = () => {
@@ -250,10 +280,15 @@ export default function News() {
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-[#00a0e8] to-[#0080c7]"></div>
                     )}
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-4 left-4 flex gap-2">
                       <span className="bg-white/90 text-[#00a0e8] px-3 py-1 rounded-full text-sm font-medium">
                         {article.category}
                       </span>
+                      {isNewArticle(article.publishDate) && (
+                        <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-pulse">
+                          Nouveau
+                        </span>
+                      )}
                     </div>
                     <div className="absolute bottom-4 right-4 text-white/90 text-sm">
                       📖 {article.readTime}

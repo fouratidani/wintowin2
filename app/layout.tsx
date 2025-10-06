@@ -7,6 +7,7 @@ import CookieConsentBanner from "../components/CookieConsentBanner"
 import PageViewTracker from "../components/PageViewTracker"
 import JSONLD from "../components/JSONLD"
 import { generateSEO, generateOrganizationSchema, SITE_CONFIG } from "../lib/seo"
+import Win2WinChatBot from "../components/chatbot/Win2WinChatBot"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -68,6 +69,7 @@ export default function RootLayout({
           <PageViewTracker />
           {children}
           <CookieConsentBanner />
+          <Win2WinChatBot />
         </CookieConsentProvider>
       </body>
     </html>

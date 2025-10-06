@@ -34,7 +34,7 @@ export async function GET() {
           category: 'Formation',
           image: '/images/img.jpg',
           isPublished: true,
-          publishDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          publishDate: new Date().toISOString(), // Today - will show "Nouveau"
           readTime: '3 min',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
@@ -47,8 +47,34 @@ export async function GET() {
           category: 'Partenariat',
           image: '/images/pq.jpg',
           isPublished: true,
-          publishDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          publishDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago - will show "Nouveau"
           readTime: '2 min',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        },
+        {
+          id: '3',
+          title: 'Succès de nos Diplômés en Cybersécurité',
+          excerpt: 'Découvrez les témoignages inspirants de nos anciens étudiants qui excellent maintenant dans le domaine de la cybersécurité.',
+          content: 'Nos diplômés continuent de nous rendre fiers avec leurs réussites exceptionnelles dans le domaine de la cybersécurité. Voici quelques témoignages inspirants.',
+          category: 'Témoignage',
+          image: '/images/s2.jpg',
+          isPublished: true,
+          publishDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago - will show "Nouveau"
+          readTime: '4 min',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        },
+        {
+          id: '4',
+          title: 'Amélioration de nos Installations de Formation',
+          excerpt: 'Nous avons récemment modernisé nos espaces de formation pour offrir une meilleure expérience d\'apprentissage.',
+          content: 'Win2Win a investi dans la modernisation de ses installations pour créer un environnement d\'apprentissage optimal et stimulant pour tous nos étudiants.',
+          category: 'Infrastructure',
+          image: '/images/s3.jpg',
+          isPublished: true,
+          publishDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago - no badge
+          readTime: '3 min',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         }
